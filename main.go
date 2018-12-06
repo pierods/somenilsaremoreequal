@@ -24,6 +24,14 @@ func InterfParm(i Interf) {
 	i.method1()
 }
 
+func StructParm(impl InterfImpl) {
+	impl.method1()
+}
+
+func StructParmPtrReceiver(impl *InterfImplPtr){
+	impl.method1()
+}
+
 func panicrecover() {
 	if recover() != nil {
 		fmt.Println("panic recovered")
@@ -37,6 +45,7 @@ func main() {
 
 	fmt.Print("Can call method on nil struct* (ptr receiver): ")
 	implPtrReceiver.method1()
+
 
 	var implValReceiver *InterfImpl
 
@@ -60,6 +69,8 @@ func main() {
 		InterfParm(i)
 	}()
 
+	fmt.Print("Can use nil ptr as parameter:")
+	StructParmPtrReceiver(implPtrReceiver)
 
 	i = implPtrReceiver
 	fmt.Printf("i is nil but assigned to null struct* (ptr receiver): %v\n", i)
@@ -68,6 +79,11 @@ func main() {
 	fmt.Print("Can use value-assigned nil interface as parameter:")
 	InterfParm(i)
 
+	fmt.Print("Cannot use nil ptr as parameter (value receiver)")
+	func () {
+		defer panicrecover()
+		StructParm(*implValReceiver)
+	} ()
 
 	i = implValReceiver
 	fmt.Printf("i is nil but assigned to null struct* (val receiver): %v\n", i)
