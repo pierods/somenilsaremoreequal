@@ -42,18 +42,26 @@ func main() {
 	var implPtrReceiver *InterfImplPtr
 
 	fmt.Printf("implPtrReceiver is nil: %v\n", implPtrReceiver)
-
 	fmt.Print("Can call method on nil struct* (ptr receiver): ")
 	implPtrReceiver.method1()
 
+	fmt.Print("Can use nil ptr as parameter:")
+	StructParmPtrReceiver(implPtrReceiver)
 
 	var implValReceiver *InterfImpl
 
+	fmt.Printf("implValReceiver is nil: %v\n", implValReceiver)
 	fmt.Print("Cannot call method on nil struct* (value receiver): ")
 	func (){
 		defer panicrecover()
 		implValReceiver.method1()
 	}()
+
+	fmt.Print("Cannot use nil ptr as parameter (value receiver)")
+	func () {
+		defer panicrecover()
+		StructParm(*implValReceiver)
+	} ()
 
 	var i Interf
 
@@ -69,30 +77,22 @@ func main() {
 		InterfParm(i)
 	}()
 
-	fmt.Print("Can use nil ptr as parameter:")
-	StructParmPtrReceiver(implPtrReceiver)
-
 	i = implPtrReceiver
-	fmt.Printf("i is nil but assigned to null struct* (ptr receiver): %v\n", i)
+	fmt.Printf("i is assigned to nil struct* (ptr receiver): %v\n", i)
 	fmt.Print("Can call method on value-assigned nil interface:")
 	i.method1()
-	fmt.Print("Can use value-assigned nil interface as parameter:")
+	fmt.Print("Can use nil-assigned interface as parameter:")
 	InterfParm(i)
 
-	fmt.Print("Cannot use nil ptr as parameter (value receiver)")
-	func () {
-		defer panicrecover()
-		StructParm(*implValReceiver)
-	} ()
 
 	i = implValReceiver
-	fmt.Printf("i is nil but assigned to null struct* (val receiver): %v\n", i)
-	fmt.Print("Cannot call method on value-assigned nil interface:")
+	fmt.Printf("i is assigned to nil struct* (value receiver): %v\n", i)
+	fmt.Print("Cannot call method on nil-assigned interface (value receiver):")
 	func() {
 		defer panicrecover()
 		i.method1()
 	} ()
-	fmt.Print("Cannot use value-assigned nil interface (val receiver):")
+	fmt.Print("Cannot use nil-assigned interface (val receiver) as parameter:")
 	func() {
 		defer panicrecover()
 		InterfParm(i)
