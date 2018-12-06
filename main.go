@@ -31,8 +31,6 @@ func panicrecover() {
 }
 
 func main() {
-	defer panicrecover()
-
 	var implPtrReceiver *InterfImplPtr
 
 	fmt.Printf("implPtrReceiver is nil: %v\n", implPtrReceiver)
