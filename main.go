@@ -43,7 +43,10 @@ func main() {
 	var implValReceiver *InterfImpl
 
 	fmt.Print("Cannot call method on nil struct* (value receiver): ")
-	//implValReceiver.method1()
+	func (){
+		defer panicrecover()
+		implValReceiver.method1()
+	}()
 
 	var i Interf
 
@@ -62,9 +65,9 @@ func main() {
 
 	i = implPtrReceiver
 	fmt.Printf("i is nil but assigned to null struct* (ptr receiver): %v\n", i)
-	fmt.Println("Can call method on value-assigned nil interface:")
+	fmt.Print("Can call method on value-assigned nil interface:")
 	i.method1()
-	fmt.Println("Can use value-assigned nil interface as parameter:")
+	fmt.Print("Can use value-assigned nil interface as parameter:")
 	InterfParm(i)
 
 
